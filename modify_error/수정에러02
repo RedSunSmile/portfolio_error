@@ -1,0 +1,48 @@
+회원수정시 에러
+문제점 원인
+1) 브라우저에서 수정버튼을 눌러도 수정을 됐다고 키가 작동해도 수정이 전혀 되지 않았다
+2) admindto is null이라는 에러가 계쏙 뜬다
+3) 대체키와 기본키의 관계를 몰랐다
+
+문제점 파악 및 해결책 찾기
+1) mapper.xml에서 idx를 빼먹었다는 사실을 알게된후 idx추가 저장한다음 수정기능 작동하기 시작
+2) idx가 primary_key로 되어있어 id가 대체키로 쓸수 있다는 db사실을 알게 되었다
+
+회원사항 수정전
+	<!--  회원사항 수정-->
+	<update id="updateMember" parameterType="co.kr.com.member.dto.MemberDto">
+	<![CDATA[
+		UPDATE
+			member
+		SET
+				id=#{id}
+			, password=#{password}
+			, name=#{name}
+			, address=#{address}
+			, email=#{email}
+			, modId=#{modId}
+			, modDt=#{modDt}
+		WHERE
+			idx=#{idx}
+	]]>
+	</update>
+  
+  회원사항 수정후
+	<!--  회원사항 수정-->
+	<update id="updateMember" parameterType="co.kr.com.member.dto.MemberDto">
+	<![CDATA[
+		UPDATE
+			member
+		SET
+				id=#{id}
+       , idx=#{idx}
+			, password=#{password}
+			, name=#{name}
+			, address=#{address}
+			, email=#{email}
+			, modId=#{modId}
+			, modDt=#{modDt}
+		WHERE
+			idx=#{idx}
+	]]>
+	</update>
