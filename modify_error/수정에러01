@@ -1,0 +1,23 @@
+수정에러01
+문제점 원인
+페이지 이동시 필요한 @ModelAttribute, @RequestParam(value="memberIdx") Long memberIdx, HttpSession,Model ,MemberDto 관계를 몰랐다
+1) @PostMapping(value="/memberModifyForm")
+public String memberUpdate(
+				@ModelAttribute SearchDto searchDto
+				, @RequestParam(value="memberIdx") Long memberIdx
+				, HttpSession session
+				, Model model, MemberDto Idx) throws Exception{
+        
+2)@PostMapping("/memberModifyProc")
+		public String updateMember(
+				HttpSession session
+				,	@ModelAttribute MemberDto memberDto
+				) throws Exception{
+        
+문제점 분석 및 해결점
+1)페이지 이동할때 기본적으로 @ModelAttribute, @RequestParam(value="memberIdx") Long memberIdx, HttpSession,Model ,MemberDto 이런 로직을 쓰면 된다
+2)xml에서 update로 쓰지 delete로 써주진 않는다!!
+
+
+
+
