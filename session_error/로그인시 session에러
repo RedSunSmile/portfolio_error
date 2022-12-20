@@ -1,0 +1,33 @@
+1) 주된 session에러발생
+Caused by: org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating SpringEL expression: "session.member.id" (template: "/main" - line 12, col 15)
+=>이말인즉슨 로그인접속이 되지도 않았는데 세션 session.member.id를 넣어서 처리할수 없다는 말이다  
+<h3>안녕하세요 [[${session.member.id}]]님</h3>==>이 부분이 문제의 원인이다!
+=>세션은 login, 비밀번호등을 통과한후에 생성된다!!!
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<div>세션정보</div>
+    <h3>안녕하세요 [[${session.member.id}]]님</h3>   ===>????session에러의 원인!!!!
+		<div><span th:text="${session.memebr}"></span></div>
+	</div>
+	<div>
+		<th:block th:if="${session.member==null}">
+			<button id="login" onClick="location.href='login'">로그인</button>
+		</th:block>
+		<th:block th:if="${session.member !=null}">
+			<button id="logout" onClick="location.href='logout'">로그아웃</button>
+			<button id="notice" onClick="location.href='/notice/list'">공지사항</button>
+		</th:block>
+	</div>
+ 	<div>
+ 		<button  type="button" onClick="location.href='signup'">회원가입</button>
+ 	</div>
+</body>
+</html>
