@@ -1,0 +1,54 @@
+회원관리 공지사항에서 계속 에러가 생겼다
+문제원인 
+삭제키를 누르면 지원지지 않는다 =>1) js에서 만든 에러에대한 "서버처리 중 에러가 발생하였습니다" 명령 실행
+                            2) post를 타지 않고 get을 타고 실행되어 not get supported 라고 나온다
+                            3) log.info id=null, password=null, name=null, address=null, idx=2 modId=나노 modDt=2022-12-18 12:30:56;초로 나와따
+                            
+문제점 분석 및 해결점 찾기
+1)log.info 내용을 자세히 안바 문제의 정확한 원인을 모르다 나중에서야 Mapper와  controller에서 작성한 코드 내용이 일치하지않는다는 사실을 알게되었다
+2) mvc방식으로 view-->controller-service-mapper-db
+               view<--controller-service-mapper-db 으로 어디서 문제가 생겼는지 찾았다
+3)controller 지우기로직일부 체크
+	//작성자하고 세션이 일치한지 확인
+			log.info("delete memberDto:{}", selectedDto);
+			memberDto.setModId(SessionUtil.getAdminId(session));
+			memberDto.setModDt(LocalDateTime.now().toString());
+			memberDto.setUseYn("N");
+			
+			memberService.deleteMember(memberDto);
+      
+ 4) mapper에서 내용일부가 다르다는 사실 발견    
+	<!--회원사항 지우기  -->
+	<update id="deleteMember" parameterType="co.kr.com.member.dto.MemberDto">
+	<![CDATA[
+		update
+			member
+		set
+    	id=#{id}             ====>controller에서 ModeId,ModDt, UseYn만 작성했다면                  
+			, password=#{password}   ===>그게 deleteMember에서 memberService로 들어가게 했다면
+			, name=#{name}        ====>당연히 id=null, password=null, name=null, address=null, email=null 도 null이 뜰수밖에 없다 
+			, address=#{address}  ===>필요없는 부분
+			, email=#{email}    ===>필요없는 부분
+			 useYn= #{useYn}    ===>controller에서 맞춰준것과 동일하게 modId, modDt, useYn만 맞춰주면 되는것이었다
+			, modId=#{modId}
+			, modDt=#{modDt}
+		WHERE
+			idx= #{idx}
+	]]>
+	</update>
+  
+  5) 고쳐준후 지우기버튼 제대로 정상작동하기 시작하였다 
+  <!--회원사항 지우기  -->
+	<update id="deleteMember" parameterType="co.kr.com.member.dto.MemberDto">
+	<![CDATA[
+		update
+			member
+		set
+			 useYn= #{useYn}
+			, modId=#{modId}
+			, modDt=#{modDt}
+		WHERE
+			idx= #{idx}
+	]]>
+	</update>
+  
