@@ -1,0 +1,38 @@
+로그인시 분명히 db에는 자료가있는데 탈퇴한 회원으로 나왔다
+원인에따른 문제시도
+1)쿼리요청부분을 Mapper값이 맞나 다시보기
+2) controller 로그인에서 log.info찍어보기
+3) service에서 로그인시에 log.info찍어보기
+4) 로그인시 사용한 db와 dto객체, Mapper.xml 맞나 하나하나 대조 확인하기
+
+문제원인 Mapper에서 찾아서 고쳐줌!!
+5) insert into member(db컬럼맞추기) values(dto 변수맞추기)=>개념잊지말기!!!
+
+<!-- 회원가입 -->
+		<insert id="insertMember" parameterType="co.kr.com.member.dto.MemberDto">
+			<![CDATA[
+				INSERT INTO member
+						(
+								id
+							, 	password
+							,	name
+							,	email
+							,	address
+							,	useYn
+							,	role_id  ===>키에 해당하는 db값이  role_id라면 똑같이 xml에서도 맞춰줘야 하는데 db에서 roleId로 하면 값이 안맞아서 당연히 탈퇴한 회원으로 뜰수밖에 없다!!
+							,  reg_dt
+							,	idx
+						)
+					VALUES	(
+								#{id}
+							,	#{password}
+							,	#{name}
+							,	#{email}
+							, 	#{address}   ===>values값은 dto에 해당하는값이 꼭 dto 객체(변수들) 이름과 같아야 한다!!
+							,	#{useYn}
+							,	#{roleId}
+							,	now()
+							,	#{idx}
+							)
+			]]>
+		</insert>
