@@ -1,0 +1,21 @@
+회원가입 버튼을 누르면 절대 회원가입 기능이  작동하지 않았다
+원인이되었던 부분
+id : $("#Id").val(), //컨트롤러에 넘기는 이름 : 입력된 데이터
+password : $("#Password").val(),
+email : $("#Email").val(),
+name : $("#Name").val(),
+address : $("#Address").val(),
+
+문제점 분석
+name=db에서의 컬럼과 같아야 한다
+ex) db  colunmn에서 id, password, email, name, address라면 똑같이 html상의 name도 똑같이 맞춰야 한다
+html상의 
+비밀번호 : <input id="password" type="password" name="password" value=""> name도 똑같이 맞춰주고
+
+js부분에서도 
+id : $("#id").val(), //컨트롤러에 넘기는 이름 : 입력된 데이터
+password : $("#password").val(),
+email : $("#email").val(),
+name : $("#name").val(),
+address : $("#address").val(),
+
